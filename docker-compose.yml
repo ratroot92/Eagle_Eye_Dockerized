@@ -1,0 +1,181 @@
+version: '3'
+services:
+  
+    rabbitmq:
+      container_name: rabbitmq
+      hostname: rabbitmq
+      image: rabbitmq:latest
+      # environment:
+      #   HOSTNAME: ${RABBITMQ_HOSTNAME}
+      #   RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
+      #   RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      #   RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      networks:
+        - main
+      ports:
+        - "5672:5672"
+      restart: on-failure
+      links: 
+        - mongodb
+
+
+    django:
+      build:
+        context: ./django
+        dockerfile: Dockerfile.django
+      container_name: django
+      hostname: django
+      restart: unless-stopped
+      networks:
+        - main
+      environment:
+        MONGODB_DATABASE: eagle_eye_db
+        MONGODB_USERNAME: 
+        MONGODB_PASSWORD: 
+        MONGODB_HOSTNAME: mongodb:27017
+        MONGODB_PORT: '27017'
+        ENV_DEBUG: 'True'
+        CELERY_RESULT_BACKEND:  amqp://guest:guest@rabbitmq/%2F
+        CELERY_TASK_SERIALIZER: 'json'
+        CELERY_RESULT_SERIALIZER: 'json'
+        CELERY_TIMEZONE:
+        REDIS_HOST: redis
+        BROKER_URL: redis
+        REDIS_PORT: 6379
+        CELERY_BROKER_URL: amqp://guest:guest@rabbitmq/%2F
+
+      volumes:
+        - ./django:/var/www/eagle_eye
+      ports:
+        - "8000:8000"
+      depends_on: 
+        - mongodb
+        - redis
+        - rabbitmq
+
+      links: 
+        - mongodb
+      # command: /usr/local/bin/python3 manage.py runserver 0.0.0.0:8000
+      command:
+        - python3
+        - /var/www/eagle_eye/manage.py
+        - runserver
+        - 0.0.0.0:8000
+        
+
+
+    mongodb:
+        image: mongo:4.0.8
+        container_name: mongodb
+        hostname: mongodb
+        restart: unless-stopped
+        command: mongod --port 27017 --bind_ip 0.0.0.0
+        networks:
+          - main
+        environment:
+          MONGO_INITDB_ROOT_USERNAME: 
+          MONGO_INITDB_ROOT_PASSWORD: 
+          MONGO_INITDB_DATABASE: eagle_eye_db
+          MONGODB_DATA_DIR: /data/db
+          MONDODB_LOG_DIR: /dev/null
+        # volumes:
+        #   - mongodbdata:/data/db
+        ports:
+          - "27017:27017"
+    nginx:
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile.nginx
+        container_name: nginx
+        hostname: nginx
+        networks:
+          - main
+        ports:
+          - 80:80
+        links:
+          - django
+    
+    redis:
+      image: redis:alpine
+      networks:
+        - main
+
+    celery:
+      build:
+        context: ./django
+        dockerfile: Dockerfile.django
+      command: celery -A Twitter_Crawler worker --loglevel=info --loglevel=DEBUG
+      # command: sh -c "wait-for rabbitmq && wait-for django:8000 -- celery -A Twitter_Crawler --loglevel=info --loglevel=DEBUG"
+      hostname: celery
+      networks:
+        - main
+      volumes:
+        - ./django/:/var/www/eagle_eye
+      working_dir: /var/www/eagle_eye
+      environment:
+        - DEBUG=1
+        - SECRET_KEY=724*0cye0yfb=l$kvk9gcuon(22pq^eq)2^8_+4$al7lj2w92
+        - DJANGO_ALLOWED_HOSTS=localhost django [::1]
+        - PYTHONUNBUFFERED=1
+        - MONGODB_DATABASE=eagle_eye_db
+        - MONGODB_USERNAME=
+        - MONGODB_PASSWORD=
+        - MONGODB_HOSTNAME=mongodb
+        - MONGODB_PORT:'27017'
+        - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq/%2F
+        - CELERY_RESULT_BACKEND=amqp://guest:guest@rabbitmq/%2F
+        - INVENIO_CELERY_BROKER_URL=amqp://guest:guest@mq:5672//
+      depends_on:
+        - redis
+        - django
+        - mongodb
+        - rabbitmq
+      links:
+        - mongodb
+        - rabbitmq
+        - redis
+      # deploy:
+      #   replicas: 2
+      #   restart_policy:
+      #     condition: on-failure
+      #   resources:
+      #     limits:
+      #       cpus: '0.50'
+      #       memory: 50M
+      #     reservations:
+      #       cpus: '0.25'
+      #       memory: 20M
+
+    celery-beat:
+      build:
+        context: ./django
+        dockerfile: Dockerfile.django
+      command: celery -A Twitter_Crawler  beat --loglevel=info --loglevel=DEBUG
+      networks:
+        - main
+      # volumes:
+      #   - ./django/:/var/www/eagle_eye
+      environment:
+        - DEBUG=1
+        - SECRET_KEY=724*0cye0yfb=l$kvk9gcuon(22pq^eq)2^8_+4$al7lj2w92
+        - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+        - PYTHONUNBUFFERED=1
+        - MONGODB_DATABASE=eagle_eye_db
+        - MONGODB_USERNAME=
+        - MONGODB_PASSWORD=
+        - MONGODB_HOSTNAME=mongodb
+        - MONGODB_PORT:'27017'
+        - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq/%2F
+        - CELERY_RESULT_BACKEND=amqp://guest:guest@rabbitmq/%2F
+        - INVENIO_CELERY_BROKER_URL=amqp://guest:guest@mq:5672//
+      depends_on:
+        - redis
+        - django
+        - mongodb
+        - rabbitmq
+      links:
+        - mongodb
+        - rabbitmq
+        - redis
+networks:
+  main:

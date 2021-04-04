@@ -1,0 +1,14 @@
+beautifulsoup4
+bs4
+celery
+channels
+channels-redis
+Django==2.2.7
+django-countries
+geopy
+kombu
+lxml
+mongoengine
+nest-asyncio
+Pillow
+requests

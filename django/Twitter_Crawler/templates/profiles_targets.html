@@ -1,0 +1,278 @@
+
+
+{% extends 'base.html'%}
+{% load static %}
+
+{% block targets_scripts%}
+
+<!-- <script src="{% static '/assets/js/core/jquery.min.js' %} "></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="{% static '/assets/js/core/popper.min.js' %} "></script>
+<script src="{% static '/assets/js/core/bootstrap.min.js' %} "></script>
+<script src="{% static '/assets/js/plugins/perfect-scrollbar.jquery.min.js' %} "></script>
+<script src="{% static '/assets/js/plugins/bootstrap-notify.js' %}"></script>
+<script src="{% static '/assets/js/black-dashboard.min.js?v=1.0.0' %}"></script>
+<script src="{% static '/assets/demo/demo.js' %} "></script> -->
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/autofill/2.3.4/js/dataTables.autoFill.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/autofill/2.3.4/js/autoFill.bootstrap4.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.bootstrap4.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/colreorder/1.5.2/js/dataTables.colReorder.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/keytable/2.5.1/js/dataTables.keyTable.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap4.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/rowgroup/1.1.1/js/dataTables.rowGroup.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.2.6/js/dataTables.rowReorder.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/scroller/2.0.1/js/dataTables.scroller.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/searchpanes/1.0.1/js/dataTables.searchPanes.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/searchpanes/1.0.1/js/searchPanes.bootstrap4.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+<script src="{% static 'scripts/tweets_target.js' %} "></script>
+{% endblock %}
+{% block content %}
+<style>
+#id_target_platform,#id_target_type,#id_twitter_username,#id_submission_date,#id_target_scheduling{
+  height: 35px;
+  border-radius: 5px;
+  width: 350px;;
+
+}
+#success_message{
+  position: absolute;;
+  width: 350px;
+  height: 60px;
+  top: 0px;
+  right: 0px;;
+}
+
+#warning_message{
+  position: absolute;;
+  width: 350px;
+  height: 60px;
+  top: 0px;
+  right: 0px;;
+}
+.table_container{
+  border-radius: 10px;
+
+}
+.form_container{
+  border-radius: 10px;
+  padding: 20px;;
+  background-color:transparent;
+}
+.table_columns{
+  font-size: 12px;;
+}
+</style>
+<style>
+ /* form inputs ids */
+ #id_target_platform,id_target_type,id_twitter_username,id_target_scheduling{
+width: 400px;;
+ } 
+</style>
+
+
+<!-- message for success -->
+{% if messages %}
+{% for message in messages %}
+{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+
+<div id="success_message" class=" alert alert-success alert-dismissible fade show" role="alert">
+  <strong><i class="fas fa-check 2x "></i>!</strong> {{message}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+{% endif  %}
+
+
+<!-- message for warning -->
+{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+
+
+<div id="warning_message" class=" alert alert-warning alert-dismissible fade show" role="alert">
+  <strong><i class="fas fa-check 2x "></i>!</strong> {{message}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif  %}
+{%endfor%}
+{%endif%}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8 form_container border d-flex flex-row justify-content-center align-items-center">
+      <form action="/tw/profiles_targets/" method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+
+          <div class="form-group">
+            <label class="text-white font-weight-bold border text-center pt-2" style=" border-radius:5px;width: 200px;"> {{form.target_platform.label_tag}} </label>
+              {{form.target_platform}}
+           </div>
+           <div class="d-flex flex-row  m-0 p-0">
+            <div class="w-50 m-0 p-0">
+
+             </div>
+            <div class="w-50 m-0 p-0">
+              {% if form.target_platform.errors %}
+              {% for target_platform in form.target_platform.errors %}
+              <div class="p-0 m-0 text-warning font-weight-bold  "style="font-size :12px;">{{target_platform | escape}}</div>
+              {% endfor %}
+              {% endif %}
+             </div>
+           </div>
+
+
+
+          <div class="form-group ">
+            <label class="text-white font-weight-bold border text-center pt-2" style=" border-radius:5px;width: 200px;"> {{form.target_type.label_tag}} </label>
+              {{form.target_type}}
+           </div>
+           <div class="d-flex flex-row  m-0 p-0">
+            <div class="w-50 m-0 p-0">
+
+             </div>
+            <div class="w-50 m-0 p-0">
+              {% if form.target_type.errors %}
+              {% for target_type in form.target_type.errors %}
+              <div class="p-0 m-0 text-warning font-weight-bold  "style="font-size :12px;">{{target_type | escape}}</div>
+              {% endfor %}
+              {% endif %}
+             </div>
+           </div>
+
+          <div class="form-group">
+           <label class="text-white font-weight-bold border text-center pt-2" style=" border-radius:5px;width: 200px;"> {{form.twitter_username.label_tag}} </label>
+             {{form.twitter_username}}
+          </div>
+          <div class="d-flex flex-row  m-0 p-0">
+            <div class="w-50 m-0 p-0">
+
+             </div>
+            <div class="w-50 m-0 p-0">
+              {% if form.twitter_username.errors %}
+              {% for twitter_username in form.twitter_username.errors %}
+              <div class="p-0 m-0 text-warning font-weight-bold  "style="font-size :12px;">{{twitter_username | escape}}</div>
+              {% endfor %}
+              {% endif %}
+             </div>
+           </div>
+
+
+          <div class="form-group">
+            <label class="text-white font-weight-bold border text-center pt-2" style=" border-radius:5px;width: 200px;"> {{form.target_scheduling.label_tag}} </label>
+              {{form.target_scheduling}}
+           </div>
+
+           <div class="d-flex flex-row  m-0 p-0">
+            <div class="w-50 m-0 p-0">
+
+             </div>
+            <div class="w-50 m-0 p-0">
+              {% if form.target_scheduling.errors %}
+              {% for target_scheduling in form.target_scheduling.errors %}
+              <div class="p-0 m-0 text-warning font-weight-bold  "style="font-size :12px;">{{target_scheduling   | escape}}</div>
+              {% endfor %}
+              {% endif %}
+             </div>
+           </div>
+
+
+
+
+        </div>
+        <div class="form-group text-center">
+          <input type="submit" class="btn btn-success" value="submit" />
+        </div>
+      </form>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-md-12 border table_container ">
+      <table  id="TwitterTargetTable" class="table  ">
+        <thead>
+          <tr>
+            <th scope="col" class="text-white text-capitalize table_columns">#</th>
+            <!-- <th scope="col" class="text-white text-capitalize table_columns">target_platform</th>
+            <th scope="col" class="text-white text-capitalize table_columns">target_type</th> -->
+            <th scope="col" class="text-white text-capitalize table_columns">twitter_username</th>
+            <th scope="col" class="text-white text-capitalize table_columns">target_scheduling</th>
+            <th scope="col" class="text-white text-capitalize table_columns">scanning_status</th>
+            <th scope="col" class="text-white text-capitalize table_columns">tweets_count</th>
+            <th scope="col" class="text-white text-capitalize table_columns">followers_count </th>
+            <th scope="col" class="text-white text-capitalize table_columns">followings_count </th>
+            <th scope="col" class="text-white text-capitalize table_columns">created_at </th>
+            <!-- <th scope="col" class="text-white text-capitalize table_columns">updated_at </th> -->
+            <th scope="col" class="text-white text-capitalize table_columns">view_operations</th>
+
+            <th scope="col" class="text-white text-capitalize table_columns">re_scan </th>
+            <th scope="col" class="text-white text-capitalize table_columns">other_operations </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in profiles_targets %}
+          <tr>
+            <td class="text-white table_columns">{{forloop.counter}}</td>
+            <!-- <td class="text-white table_columns">{{i.target_platform}}</td>
+            <td class="text-white table_columns">{{i.target_type}}</td> -->
+            <td class="text-white table_columns">{{i.twitter_username}}</td>
+            <td class="text-white table_columns">{{i.target_scheduling}}</td>
+            <td class="text-white table_columns">{{i.scanning_status}}   {% if i.scanning_status == 'pending' %}
+              <i class="fas fa-cog fa-spin"></i>
+              {% endif %}<span class="{{i.twitter_username}}" id="{{i.twitter_username}}"></span> </td>
+              <td class="text-white table_columns">{{i.tweets_count}}</td>
+              <td class="text-white table_columns">{{i.followers_count}}</td>
+              <td class="text-white table_columns">{{i.followings_count}}</td>
+            <td class="text-white table_columns">{{i.created_at}}</td>
+            <!-- <td class="text-white table_columns">{{i.updated_at}}</td> -->
+            <td class="text-white table_columns"><div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="fas fa-eye fa-2x"></i>
+  </button>
+  <div class="dropdown-menu dropdown-sm" aria-labelledby="dropdownMenu2">
+    <a class="dropdown-item " type="button" href="{% url 'viewProfile_Full_profile' username=i.twitter_username %}">Full_profile</a>
+    <a class="dropdown-item " type="button" href="{% url 'viewProfile_Following_tree' username=i.twitter_username %}">Following_tree </a>
+    <a class="dropdown-item " type="button" href="{% url 'viewProfile_Followers_tree' username=i.twitter_username %}">Followers_tree </a>
+    <a class="dropdown-item " type="button" href="{% url 'viewProfile_Followers_locations' username=i.twitter_username %}">Follower_locations </a>
+    <a class="dropdown-item " type="button" href="{% url 'viewProfile_Following_locations' username=i.twitter_username %}">Following_locations </a>
+  </div>
+</div></td>
+
+            <td class="text-white table_columns"><button type="button" class="btn btn-sm btn-primary scanBtn" data-id="{{i.twitter_username}}" id="scanBtn">re_Scan </button></td>
+
+
+            <td class="text-white table_columns">
+              <a type="button" class="btn btn-sm btn-danger getCount"href="{% url 'delete_profiles_targets' username=i.twitter_username %}" id="deleteBtn">delete </a></td>
+
+
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

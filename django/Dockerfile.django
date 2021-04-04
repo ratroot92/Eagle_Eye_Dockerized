@@ -1,0 +1,69 @@
+# FROM python:3.8
+# # accept arguments
+# ARG PIP_REQUIREMENTS=production.txt
+# ENV PYTHONDONTWRITEBYTECODE 1
+# ENV PYTHONUNBUFFERED 1
+# RUN pip install --upgrade pip setuptools
+# RUN useradd -ms /bin/bash eagle_eye
+# RUN mkdir -p /var/www/eagle_eye
+# RUN chown eagle_eye:eagle_eye -R /var/www/eagle_eye
+# USER eagle_eye
+# WORKDIR /var/www/eagle_eye
+# RUN python3 -m venv venv
+# RUN apk update
+# RUN apk add make automake gcc g++ subversion python3-dev
+# RUN pip3 install --upgrade pip
+# RUN pip3 install -r requirements.txt
+# RUN pip3 install gunicorn
+# # COPY --chown=eagle_eye ./requirements.txt /var/www/eagle_eye/requirements.txt
+# # # RUN ./env/bin/pip3 install -r /var/www/eagle_eye/requirements/${PIP_REQUIREMENTS}
+# # RUN ./env/bin/pip3 install -r /var/www/eagle_eye/requirements.txt
+# COPY --chown=eagle_eye . /var/www/eagle_eye/
+# RUN ls
+# RUN pwd
+# EXPOSE 8000
+# # RUN source /venv/bin/activate
+# # CMD ["/bin/bash", "ls && pwd && /var/www/eagle_eye/entrypiont.sh"]
+
+# CMD [ "gunicorn", "-w", "4", "--bind", "0.0.0.0:8000", "wsgi"]
+
+
+# FROM python:3.7-alpine
+# FROM maliksblr92/django_env:latest
+# LABEL MAINTAINER="Ahmed KabeerShaukat <example@domain.com>"
+# ENV PYTHONUNBUFFERED 0
+# ENV GROUP_ID=1000 \
+#     USER_ID=1000
+# WORKDIR /var/www/eagle_eye
+# # COPY . /var/www/eagle_eye
+# COPY ./development.txt /var/www/eagle_eye
+# # RUN apk update
+# # RUN apk add make automake gcc g++ subversion python3-dev git nano 
+# # RUN pip3 install --upgrade pip
+# RUN pip3 install -r development.txt
+# # RUN pip3 install gunicorn
+
+# RUN addgroup -g $GROUP_ID www
+# RUN adduser -D -u $USER_ID -G www www -s /bin/sh
+# USER www
+
+# EXPOSE 8000
+# RUN ls
+# # CMD [ "gunicorn", "-w", "4", "--bind", "0.0.0.0:8000", "wsgi"]
+# CMD ["python3", "manage.py", "runserver"]
+
+FROM maliksblr92/django_env:latest
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+# Creating working directory
+RUN mkdir -p /var/www/eagle_eye
+WORKDIR /var/www/eagle_eye
+# Copying requirements
+# COPY . /var/www/eagle_eye
+# RUN apt-get update && apt-get install -y gettext libgettextpo-dev 
+# RUN pip install -r requirements.txt
+#RUN pip3 install beautifulsoup4 bs4 celery channels channels-redis Django==2.2.7 django-countries geopy kombu lxml mongoengine nest-asyncio Pillow requests
+RUN ls
+
+# pip3 install beautifulsoup4 bs4 celery channels channels-redis Django==2.2.7 django-countries geopy kombu lxml mongoengine nest-asyncio Pillow requests
+#apk upgrade --no-cache && apk add --no-cache  musl  build-base  python3  python3-dev  postgresql-dev  bash  git  && pip3 install --no-cache-dir --upgrade pip && rm -rf /var/cache/* && rm -rf /root/.cache/*
