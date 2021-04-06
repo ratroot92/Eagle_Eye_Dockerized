@@ -176,7 +176,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-
+# STATIC_ROOT =  os.path.join(BASE_DIR, "static"),
 
 BROKER_URL=os.getenv('BROKER_URL',default='amqp://127.0.0.1') 
 CELERY_BROKER_URL = "rabbitmq://rabbitmq:5672"
@@ -199,8 +199,8 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            # "hosts": [("127.0.0.1", 6379)],
-            "hosts": [(os.getenv('REDIS_HOST',default='redis'), int(os.getenv('REDIS_PORT',default=6379)))],
+             "hosts": [("redis", 6379), ("redis", 6379)],
+            # "hosts": [(os.getenv('REDIS_HOST',default='redis'), int(os.getenv('REDIS_PORT',default=6379)))],
             "capacity": 1500,  # default 100
             "expiry": 10,  # default 60
         },

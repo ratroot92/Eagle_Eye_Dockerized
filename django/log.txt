@@ -1,0 +1,11 @@
+*** - Connecting DB --Try -***
+*** - MONGODB_DATABASE -*** eagle_eye_db
+*** - MONGODB_HOSTNAME -*** mongodb:27017
+*** - MONGODB_PORT -*** 27017
+MongoDb connection success
+MongoDb Connection --MongoModels  mongodb:27017 eagle_eye_db 27017
+2021-04-06 15:18:14,326 INFO     Starting server at tcp:port=8080:interface=0.0.0.0
+2021-04-06 15:18:14,327 INFO     HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2021-04-06 15:18:14,327 INFO     Configuring endpoint tcp:port=8080:interface=0.0.0.0
+2021-04-06 15:18:14,329 INFO     Listening on TCP address 0.0.0.0:8080
+2021-04-06 15:18:27,272 INFO     Killed 0 pending application instances

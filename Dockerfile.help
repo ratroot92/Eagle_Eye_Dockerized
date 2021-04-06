@@ -1,0 +1,5 @@
+#Command Vs Entrypiont
+#Container only Lives until process is 
+#top open a terminal bash while creating a conatiner from image of ubuntu we will use 
+#- CMD["bash"]
+

@@ -8,9 +8,9 @@ from .consumers import TweetCount
 websocket_urlpatterns = [
     # routes defined in tweets_targets.html
     # re_path(r're_scan/(?P<_username>\w+)/$', Twitter_Tweets_Targets_Channels),
-    re_path(r're_scan/', Twitter_Tweets_Targets_Channels),
-    re_path(r'celery_notifications/Twitter_Crawler/',CELERY_NOTIFICATIONS_Twitter_Crawler),
+    re_path(r'ws/re_scan/', Twitter_Tweets_Targets_Channels),
+    re_path(r'ws/celery_notifications/Twitter_Crawler/',CELERY_NOTIFICATIONS_Twitter_Crawler),
     # routes defined in profiles_targets.html
-    re_path(r'getCount/', TweetCount),
-    re_path(r'rescan/profile_targets/',Rescan_Twitter_Profile_Target)
+    re_path(r'ws/getCount/', TweetCount),
+    re_path(r'ws/rescan/profile_targets/',Rescan_Twitter_Profile_Target)
 ]

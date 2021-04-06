@@ -1,0 +1,7 @@
+
+
+
+https://programmer.group/django-nginx-uwsgi-redis-websocket-configuration-use-and-deployment.html
+
+
+https://www.youtube.com/watch?v=ZpR1W-NWnp4

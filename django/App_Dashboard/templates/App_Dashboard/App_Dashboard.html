@@ -55,17 +55,17 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
     <img src="{% static '/images/logo.png' %}" class="logo-img" />
-    <a class="navbar-brand" target="_blank" href="#">Eagle Eye</a>
+    <a class="navbar-brand"  href="/app/dashboard/">Eagle Eye</a>
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
       <li class="nav-item active">
-        <a class="nav-link" target="_blank" href="{% url 'Twitter_Crawler:tweets_targets' %}">Twitter Crawler <span
+        <a class="nav-link"  href="{% url 'Twitter_Crawler:tweets_targets' %}">Twitter Crawler <span
             class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item active">
-        <a class="nav-link" target="_blank" href="#">Rapid Search</a>
+        <a class="nav-link"  href="#">Rapid Search</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" target="_blank" href="#">Image Reverse</a>
+        <a class="nav-link"  href="#">Image Reverse</a>
       </li>
 
     </ul>
@@ -102,7 +102,7 @@
 
                 <tr>
                   <th scope="row">{{forloop.counter}}</th>
-                  <td> <a class="trendLink" target="_blank" href="{{Trends.href}}">{{Trends.name}}</a></td>
+                  <td> <a class="trendLink"  href="{{Trends.href}}">{{Trends.name}}</a></td>
                   <td>{{Trends.count}}</td>
 
                 </tr>
@@ -148,7 +148,7 @@
             
                 <tr>
                   <th scope="row">{{forloop.counter}}</th>
-                  <td> <a class="trendLink" target="_blank" href="{{Trends.href}}">{{Trends.name}}</a></td>
+                  <td> <a class="trendLink"  href="{{Trends.href}}">{{Trends.name}}</a></td>
                   <td>{{Trends.count}}</td>
 
                 </tr>
@@ -216,7 +216,7 @@
 
                 <tr>
                   <th scope="row">{{forloop.counter}}</th>
-                  <td> <a class="trendLink" target="_blank" href="{{Trends.href}}">{{Trends.name}}</a></td>
+                  <td> <a class="trendLink"  href="{{Trends.href}}">{{Trends.name}}</a></td>
                   <td>{{Trends.count}}</td>
 
                 </tr>
@@ -246,8 +246,8 @@
     $('#syncPakistanTrends').empty().append(getCurrentTime())
     //Initial Renderings hide Show
     console.log("%c Jquery ready ! ", "color:green;font-size:16px;font-weight:bold");
-    const topTrendsSocket = new WebSocket('ws://' + window.location.host + '/topTrends/')
-    const scheduleSocket = new WebSocket('ws://' + window.location.host + '/scheduleUpdate/')
+    const topTrendsSocket = new WebSocket('ws://' + window.location.host + '/ws/topTrends/')
+    const scheduleSocket = new WebSocket('ws://' + window.location.host + '/ws/scheduleUpdate/')
     console.log(scheduleSocket)
     scheduleSocket.onmessage = function (e) {console.log("***-scheduleSocket(onmessage)-***")
     let responseData=JSON.parse(e.data)
@@ -307,7 +307,7 @@
     let html = '';
     $(`#${containerId}`).empty()
     trends.forEach(function (val, key) {
-      html += `<tr><th scope="row">${key}</th><td> <a  class="trendLink" target="_blank" href="${val["href"]}">${val["name"]}</a></td><td>${val["count"]}</td></tr>`;
+      html += `<tr><th scope="row">${key}</th><td> <a  class="trendLink"  href="${val["href"]}">${val["name"]}</a></td><td>${val["count"]}</td></tr>`;
     })
     $(`#${containerId}`).append(html)
     publishToastMessage(toastMessage, "success");
@@ -319,7 +319,7 @@
     let html = '';
     $(`#${containerId}`).empty()
     trends.forEach(function (val, key) {
-      html += `<tr><th scope="row">${key}</th><td> <a  class="trendLink" target="_blank" href="${val["href"]}">${val["name"]}</a></td><td>${val["count"]}</td></tr>`;
+      html += `<tr><th scope="row">${key}</th><td> <a  class="trendLink"  href="${val["href"]}">${val["name"]}</a></td><td>${val["count"]}</td></tr>`;
     })
     $(`#${containerId}`).append(html)
     publishToastMessage(toastMessage, "success");
@@ -343,7 +343,7 @@
     let cityName=$(this).val()
     console.log(cityName)
     if(cityName !== 'undefined' && cityName !== '' ){
-      let topTrendsSocket = new WebSocket('ws://' + window.location.host + '/topTrends/location/'+cityName)
+      let topTrendsSocket = new WebSocket('ws://' + window.location.host + '/ws/topTrends/location/'+cityName)
       console.log(topTrendsSocket)
     }
   })
