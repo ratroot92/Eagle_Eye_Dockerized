@@ -230,12 +230,12 @@ input:checked + .slider .off
         $(document).ready(function(){
             $('.on').on('click',function(){
                 console.log("on")
-                window.location.href ="{%url 'Twitter_Crawler:viewTweets' username=tweets.0.username %}"
+                window.location.href ="{%url 'Twitter_Crawler:viewTweets' username=tweets.0.username page=1 %}"
             })
     
             $('.off').on('click',function(){
                 console.log("Move To JSON Viewer")
-                window.location.href ="{%url 'Twitter_Crawler:viewTweets' username=tweets.0.username %}"
+                window.location.href ="{%url 'Twitter_Crawler:viewTweets' username=tweets.0.username page=1 %}"
             })
         })
     </script>

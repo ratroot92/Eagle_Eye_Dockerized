@@ -1,10 +1,8 @@
-
-
 {% extends 'base.html'%}
 {% load static %}
 
 {% block Css_Scripts %}
-<link rel="stylesheet" href="{% static 'css/tweets_targets.css'%}" type="text/css" />
+<!-- <link rel="stylesheet" href="{% static 'css/tweets_targets.css'%}" type="text/css" /> -->
 {% endblock %}
 
 {% block targets_scripts%}
@@ -47,68 +45,94 @@
 <!-- <script src="{% static 'scripts/tweets_target.js' %} "></script> -->
 <script>
   {% for message in messages %}
-  $(document).ready(function() {
-    let message="{{ message }}";
-      console.log("%cToaster Ready !", "color:green;font-size:16px;font-weight:bold;")
-      console.log(message)
-      Command: toastr["{{ message.tags }}"]("{{ message }} .")
+  $(document).ready(function () {
+    let message = "{{ message }}";
+    console.log("%cToaster Ready !", "color:green;font-size:16px;font-weight:bold;")
+    console.log(message)
+    Command: toastr["{{ message.tags }}"]("{{ message }} .")
 
-      toastr.options = {
-          "closeButton": true,
-          "debug": false,
-          "newestOnTop": false,
-          "progressBar": true,
-          "positionClass": "toast-top-right",
-          "preventDuplicates": false,
-          "onclick": null,
-          "showDuration": "300",
-          "hideDuration": "1000",
-          "timeOut": "5000",
-          "extendedTimeOut": "1000",
-          "showEasing": "swing",
-          "hideEasing": "linear",
-          "showMethod": "fadeIn",
-          "hideMethod": "fadeOut"
-      }
+    toastr.options = {
+      "closeButton": true,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": true,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": false,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "5000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    }
   });
   {% endfor %}
-  </script>
+</script>
 {% endblock %}
 {% block content %}
 <style>
-#id_target_platform,#id_target_type,#id_twitter_username,#id_submission_date,#id_target_scheduling{
-  height: 35px;
-  border-radius: 5px;
-  width: 350px;;
+  #id_target_platform,
+  #id_target_type,
+  #id_twitter_username,
+  #id_submission_date,
+  #id_target_scheduling {
+    height: 35px;
+    border-radius: 5px;
+    width: 350px;
+    ;
 
-}
-#success_message{
-  position: absolute;;
-  width: 350px;
-  height: 60px;
-  top: 0px;
-  right: 0px;;
-}
+  }
 
-#warning_message{
-  position: absolute;;
-  width: 350px;
-  height: 60px;
-  top: 0px;
-  right: 0px;;
-}
-.table_container{
-  border-radius: 10px;
+  #success_message {
+    position: absolute;
+    ;
+    width: 350px;
+    height: 60px;
+    top: 0px;
+    right: 0px;
+    ;
+  }
 
-}
-.form_container{
+  #warning_message {
+    position: absolute;
+    ;
+    width: 350px;
+    height: 60px;
+    top: 0px;
+    right: 0px;
+    ;
+  }
 
-  background-color: black;
-}
-.table_columns{
-  font-size: 12px;;
-}
+  .table_container {
+    border-radius: 10px;
+
+  }
+
+  .form_container {
+
+    background-color: black;
+  }
+
+  .table_columns {
+    font-size: 12px;
+    ;
+  }
 </style>
+<!-- Form Styles Css  Start -->
+<style>
+  .custom-label {
+    font-size: 12px;
+    font-weight: bold;
+    border: 1px solid green;
+    text-align: left;
+  }
+
+  .custom-field {}
+</style>
+<!-- Form Styles Css End  -->
 
 <!-- message for success -->
 <!-- {% if messages %}
@@ -140,116 +164,118 @@
 {%endif%} -->
 
 <div class="container-fluid">
+  <div class="row mt-1">
+    <div class="col-md-12  bg-success d-flex flex-row justify-content-center align-items-center ">
+      <h5 class="text-white font-weight-bold mt-1">Add Twitter Target  </h5>
+    </div>
+  </div>
   <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-8  ">
+
+    <div class="col-md-12  ">
       <form action="{% url 'Twitter_Crawler:tweets_targets' %}" method="POST">
         {% csrf_token %}
-       
+
         <!-- row start -->
-          <div class="row mt-3">
-            <div class="col-md-2">
-              <label class="label-custom">Target Platform</label>
-            </div>
-            <div class="col-md-6">
-          <input type="text" name="target_platform" id="target_platform" value="Twitter" readonly class="form-control form-control-custom" required />
-            </div>
-            <div class="col-md-4 ">
-              <small class="text-info g-flex-strat-center-row"> Twitter,Facebook,Linkedin</small>
-            </div>
-            <div class="col-md-2"></div>
-            <div class="col-md-6" id="err_target_platform">
-           <!-- publish error here  -->
-            </div> 
+        <div class="row mt-3">
+          <div class="col-md-2">
+            <label for="target_platform" class="form-control form-control-sm custom-label">Target Platofrm</label>
           </div>
-       <!-- row end -->
+          <div class="col-md-6">
+            <input type="text" name="target_platform" id="target_platform" value="Twitter" readonly
+              class="form-control form-control-sm custom-field">
+          </div>
+          <div class="col-md-4 " id="err_target_platform">
+            <!-- publish error here  -->
+          </div>
+        </div>
+        <!-- row end -->
+
+
+
+
+
 
 
 
         <!-- row start -->
         <div class="row mt-3">
           <div class="col-md-2">
-            <label class="label-custom">Target Type</label>
+            <label for="target_type" class="form-control form-control-sm custom-label">Target Type</label>
           </div>
           <div class="col-md-6">
-        <input type="text" name="target_type" id="target_type"  value="Tweets" readonly   class="form-control form-control-custom" required />
+            <input type="text" name="target_type" id="target_type" value="Tweets" readonly
+              class="form-control form-control-sm custom-field">
           </div>
-          <div class="col-md-4 ">
-            <small class="text-info g-flex-strat-center-row"> Tweets,Profile,Followers</small>
+          <div class="col-md-4 " id="err_target_type">
+            <!-- publish error here  -->
           </div>
-          <div class="col-md-2"></div>
-          <div class="col-md-6" id="err_target_type">
-         <!-- publish error here  -->
-          </div> 
         </div>
-     <!-- row end -->
+        <!-- row end -->
+
+
+
 
 
         <!-- row start -->
         <div class="row mt-3">
           <div class="col-md-2">
-            <label class="label-custom">Target Username</label>
+            <label for="target_username" class="form-control form-control-sm custom-label">Target Username</label>
           </div>
           <div class="col-md-6">
-        <input type="text" name="target_username" id="target_username"  class="form-control form-control-custom" required />
+            <input type="text" name="target_username" id="target_username" required
+              class="form-control form-control-sm custom-field">
           </div>
-          <div class="col-md-4 ">
-            <small class="text-info g-flex-strat-center-row"> Must be valid Username</small>
+          <div class="col-md-4 " id="err_target_username">
+            <!-- publish error here  -->
           </div>
-          <div class="col-md-2"></div>
-          <div class="col-md-6" id="err_target_username">
-         <!-- publish error here  -->
-          </div> 
         </div>
-     <!-- row end -->
+        <!-- row end -->
 
 
 
-     <!-- row start -->
-     <div class="row mt-3">
-      <div class="col-md-2">
-        <label class="label-custom">Target Username</label>
-      </div>
-      <div class="col-md-6">
-    <select type="text" name="target_scheduling" id="target_scheduling"  class="form-control form-control-custom" required >
-      <option value="">Select Target Scheduling </option>
-      {% for chioce in PERIODIC_INTERVALS %}
-      <option value="{{chioce.0}}">{{chioce.1}} </option>
-      {% endfor %}
-     
-    </select>
-      </div>
-      <div class="col-md-4 ">
-        <small class="text-info g-flex-strat-center-row"> </small>
-      </div>
-      <div class="col-md-2"></div>
-      <div class="col-md-6" id="err_target_scheduling">
-     <!-- publish error here  -->
-      </div> 
-    </div>
- <!-- row end -->
+        <!-- row start -->
+        <div class="row mt-3">
+          <div class="col-md-2">
+            <label for="target_scheduling" class="form-control form-control-sm custom-label">Target Scheduling</label>
+          </div>
+          <div class="col-md-6">
+            <select type="text" name="target_scheduling" id="target_scheduling"
+              class="form-control form-control-sm form-control-custom" required>
+              <option value="">Select Target Scheduling </option>
+              {% for chioce in PERIODIC_INTERVALS %}
+              <option value="{{chioce.0}}">{{chioce.1}} </option>
+              {% endfor %}
 
-
-
- 
-       
-
-
-
-
-       
-        <div class="form-group text-center">
-          <input type="submit" class="btn btn-success" value="submit" />
+            </select>
+          </div>
+          <div class="col-md-4 " id="err_target_scheduling">
+            <!-- publish error here  -->
+          </div>
         </div>
+        <!-- row end -->
+
+        <div class="row mt-3">
+          <div class="col-md-8 text-center">
+            <button type="submit" class="btn btn-sm btn-outline-success font-weight-bold"><i class="fas fa-paper-plane font-weight-bold"></i> Submit</button>
+          </div>
+        </div>
+
+
+        
       </form>
     </div>
-    <div class="col-md-2"></div>
+
+  </div>
+  <div class="row mt-2">
+    <div class="col-md-12  bg-success d-flex flex-row justify-content-center align-items-center ">
+      <h5 class="text-white font-weight-bold mt-1">All Twitter Targets </h5>
+    </div>
   </div>
 
-  <div class="row">
+  <div class="row ">
 
     <div class="col-md-12 border table_container ">
-      <table  id="TwitterTargetTable" class="table  ">
+      <table id="TwitterTargetTable" class="table  ">
         <thead>
           <tr>
             <th scope="col" class="text-dark text-capitalize table_columns">#</th>
@@ -261,7 +287,7 @@
             <th scope="col" class="text-dark text-capitalize table_columns">tweets_count</th>
             <th scope="col" class="text-dark text-capitalize table_columns">created_at </th>
             <!-- <th scope="col" class="text-dark text-capitalize table_columns">updated_at </th> -->
-     
+
             <th scope="col" class="text-dark text-capitalize table_columns">Operations </th>
           </tr>
         </thead>
@@ -273,28 +299,36 @@
             <td class="text-dark table_columns">{{i.target_type}}</td> -->
             <td class="text-dark table_columns">{{i.target_username}}</td>
             <td class="text-dark table_columns">{{i.target_scheduling}}</td>
-            <td class="text-dark table_columns">{{i.scanning_status}}   {% if i.scanning_status == 'pending' %}
+            <td class="text-dark table_columns">{{i.scanning_status}} {% if i.scanning_status == 'pending' %}
               <i class="fas fa-cog fa-spin"></i>
-              {% endif %}<span class="{{i.twitter_username}}" id="{{i.twitter_username}}"></span> </td>
-              <td class="text-dark table_columns">{{i.tweets_count}}</td>
+              {% endif %}<span class="{{i.twitter_username}}" id="{{i.twitter_username}}"></span>
+            </td>
+            <td class="text-dark table_columns">{{i.tweets_count}}</td>
             <td class="text-dark table_columns">{{i.created_at}}</td>
             <!-- <td class="text-dark table_columns">{{i.updated_at}}</td> -->
-           
+
 
             <!-- <td class="text-dark table_columns"><button type="button" class="btn btn-sm btn-primary scanBtn" data-id="{{i.twitter_username}}" id="scanBtn">re_Scan </button></td> -->
 
 
-              <!-- <td class="text-dark table_columns"><button type="button" class="btn btn-sm btn-success getCount" data-id="{{i.twitter_username}}" id="scanBtn">getCount </button> -->
-             
-              <td class="text-dark table_columns">
-                {% if i.scanning_status == "pending" %}
-              
-                {% else %}
-                <a  class="badge badge-success"  href="{% url 'Twitter_Crawler:viewTweets' username=i.target_username %}"><i class="fas fa-eye fa-2x"></a></i>
-                <a  class="badge badge-danger"  href="{% url 'Twitter_Crawler:delete_tweet_target'  username=i.target_username  %}"><i class="fas fa-trash fa-2x"></a></i>
-                {% endif %}  
-              </td>
-          
+            <!-- <td class="text-dark table_columns"><button type="button" class="btn btn-sm btn-success getCount" data-id="{{i.twitter_username}}" id="scanBtn">getCount </button> -->
+
+            <td class="text-dark table_columns">
+              {% if i.scanning_status == "pending" %}
+
+              {% else %}
+              <a class="badge badge-success"
+                href="{% url 'Twitter_Crawler:viewTweets' username=i.target_username page=1 %}"><i
+                  class="fas fa-eye fa-2x"></a></i>
+              <a class="badge badge-success"
+                href="{% url 'Twitter_Crawler:analyzeUser' username=i.target_username %}"><i
+                  class="fas fa-user fa-2x"></a></i>
+              <a class="badge badge-danger"
+                href="{% url 'Twitter_Crawler:delete_tweet_target'  username=i.target_username  %}"><i
+                  class="fas fa-trash fa-2x"></a></i>
+              {% endif %}
+            </td>
+
 
 
           </tr>
@@ -307,4 +341,3 @@
 </div>
 
 {% endblock %}
-

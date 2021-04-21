@@ -54,7 +54,11 @@ def gettweets(request,_username):
 
 
 
-
+"""
+Serves Routes 
+GET => http://localhost/tw/twitter/
+POST => Add twitter tweets targets
+"""
 class Tweets_Targets(View):
     def get(self,request,*args,**kwargs):
         try:
@@ -70,28 +74,32 @@ class Tweets_Targets(View):
         target_type=request.POST.get('target_type')
         target_username=request.POST.get('target_username')
         target_scheduling=request.POST.get('target_scheduling')
-        print(f"{bcolors.WARNING}Twitter Target -- POST ,{bcolors.ENDC}")
-        print(f"{bcolors.WARNING}{target_platform},{target_type},{target_username},{target_scheduling},{bcolors.ENDC}")
-        try:
-            Obj=Twitter_Target_Document()
-            targetExist=Obj.UserExist(target_username)
-            if not targetExist:
-                Query=Obj.Create_Twitter_Target(target_platform,target_type,target_username,target_scheduling)
-                if(Query):
-                    celery_task_sent=getTweets.delay(target_username)
-                    messages.success(request, 'Target created successfully.')
-                    return redirect('/tw/twitter')
+        if target_platform and target_type and target_username and target_scheduling:
+            print(f"{bcolors.WARNING}Twitter Target -- POST ,{bcolors.ENDC}")
+            print(f"{bcolors.WARNING}{target_platform},{target_type},{target_username},{target_scheduling},{bcolors.ENDC}")
+            try:
+                Obj=Twitter_Target_Document()
+                targetExist=Obj.UserExist(target_username)
+                if not targetExist:
+                    Query=Obj.Create_Twitter_Target(target_platform,target_type,target_username,target_scheduling)
+                    if(Query):
+                        celery_task_sent=getTweets.delay(target_username)
+                        messages.success(request, 'Target created successfully.')
+                        return redirect('/tw/twitter')
+                    else:
+                        messages.error(request, 'Operation failed .')
+                    
+                        return redirect('/tw/twitter')
                 else:
-                    messages.error(request, 'Operation failed .')
-                  
+                    messages.error(request, 'Target already exist ')
                     return redirect('/tw/twitter')
-            else:
-                messages.error(request, 'Target already exist ')
+            except Exception as e:
+                print(e)
+                messages.error(request, 'Operation failed .')
                 return redirect('/tw/twitter')
-        except Exception as e:
-            print(e)
-            messages.error(request, 'Operation failed .')
-            return redirect('/tw/twitter')
+        else:
+             messages.error(request, 'Missing Fields ...')
+             return redirect('/tw/twitter')
        
 class Delete_Tweet_Target(View):
     def get(self,request,*args,**kwargs):
@@ -150,24 +158,52 @@ def viewTweetsJson(request,username):
         #return render(request,'Tweets_Json_Viewer.html',{'tweets':json.dumps(targetExist.tweets)})
 
 
-def viewTweets(request,username):
-    print(f"{bcolors.WARNING}Twitter_Crawler  -- viewTweets(request,username)   ,{bcolors.ENDC}")
-    lower_username=username.lower()
-    targetExist=Twitter_Target_Document.objects.filter(target_username=lower_username).first()
-    if(targetExist.tweets_count < 1):
-        messages.error(request,'No tweets found ')
-        return redirect('/tw/tweets_targets')
-    else:      
-        l=(len(targetExist.tweets)//2)
-        paginator=Paginator(targetExist.tweets,l)
-        page=request.GET.get('page')
-        try:
-            tweets=paginator.page(page)
-        except PageNotAnInteger:
-            tweets=paginator.page(1)
-        except EmptyPage:
-            tweets=paginator.page(paginator.num_pages)
-    return render(request,'view_tweets.html',{'tweets':tweets})
+def viewTweets(request,username,page):
+    if Twitter_Target_Document.objects.filter(target_username=username.lower()).count()>0:
+        targetUser = Twitter_Target_Document.objects.filter(target_username=username.lower()).first()
+        targetTweetsList=targetUser.tweets
+        paginator = Paginator(targetTweetsList, 100)
+        page_obj = paginator.get_page(page)  # new 
+        print(username)
+        print(page)
+        # page=request.GET.get('page',1)
+        # if not page :
+        return render(request, 'view_tweets.html', { 'tweets': page_obj,'username':username })
+        # try:
+        #     tweets = paginator.page(1)
+        # except PageNotAnInteger:
+        #     tweets = paginator.page(1)
+        # except EmptyPage:
+        #     tweets = paginator.page(paginator.num_pages)
+            # return render(request, 'view_tweets', { 'tweets': tweets })
+        # else:
+        #      paginatedTweets=paginator.page(1)
+        
+        # return render(request,'view_tweets.html',{'tweets':paginatedTweets})
+        # print(paginator.count)
+        # print(paginator.num_pages)
+        # print(paginator.page_range)
+        # print(paginator.count)
+
+    else:
+         return redirect('/tw/tweets_targets')
+    # print(f"{bcolors.WARNING}Twitter_Crawler  -- viewTweets(request,username)   ,{bcolors.ENDC}")
+    # lower_username=username.lower()
+    # targetExist=Twitter_Target_Document.objects.filter(target_username=lower_username).first()
+    # if(targetExist.tweets_count < 1):
+    #     messages.error(request,'No tweets found ')
+    #     return redirect('/tw/tweets_targets')
+    # else:      
+    #     l=(len(targetExist.tweets)//2)
+    #     paginator=Paginator(targetExist.tweets,l)
+    #     page=request.GET.get('page')
+    #     try:
+    #         tweets=paginator.page(page)
+    #     except PageNotAnInteger:
+    #         tweets=paginator.page(1)
+    #     except EmptyPage:
+    #         tweets=paginator.page(paginator.num_pages)
+    # return render(request,'view_tweets.html',{'tweets':tweets})
    
 # def viewTweets(request,username):
 #      print(f"{bcolors.WARNING}Twitter_Crawler  -- viewTweets(request,username)   ,{bcolors.ENDC}")
@@ -544,7 +580,16 @@ def rapid_search(request):
     return render(request,'rapidsearch.html')
 
 
+"""Anyalyze User Start """
+class analyzeUser (View):
+    def get(self,request,*args,**kwargs):
+        print(request)
+        context={
+            username:request.kwargs.get('username')
+        }
+        return render (request,'analyze_user.html',context)
 
+""" Analyze User End  """
 
 
 

@@ -63,14 +63,14 @@ services:
       #   - manage.py 
       #   - runserver
       # command: 
-      #   - daphne
-      #   - -b 0.0.0.0
-      #   - -p 8080
-      #   - d_auth.asgi:application
-      #   - python3
-      #   - /var/www/eagle_eye/manage.py
-      #   - runserver
-      #   - 0.0.0.0:8000
+        # - daphne
+        # - -b 0.0.0.0
+        # - -p 8080
+        # - d_auth.asgi:application
+        # - python3
+        # - /var/www/eagle_eye/manage.py
+        # - runserver
+        # - 0.0.0.0:8000
       # command: 
       #   - uwsgi   
       #   - --socket eagle_eye.sock
@@ -84,6 +84,8 @@ services:
         container_name: mongodb
         hostname: mongodb
         restart: unless-stopped
+        volumes:
+          - "./database:/data/db"
         command: mongod --port 27017 --bind_ip 0.0.0.0
         networks:
           - main
@@ -102,7 +104,7 @@ services:
             context: ./nginx
             dockerfile: Dockerfile.nginx
         container_name: nginx
-        hostname: nginx
+        hostname: nginx 
         environment:
           UWSGI_SOCKET_ADDR: unix:///var/www/eagle_eye/eagle_eye.sock
           DAPHNE_SOCKET_ADDR: http://unix:///var/www/eagle_eye/daphne.sock
